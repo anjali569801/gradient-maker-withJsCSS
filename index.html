@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <div class="container">
+    <span>choose gradient :-</span>
+    <select id="gradient-selector">
+      <option id="LG" value="linear-gradient">linear-gradient</option>
+      <option id="RG" value="radial-gradient">radial-gradient</option>
+    </select>
+    <section class="after-gradient-option" style="margin-top:-15px;">
+      <select>
+        <option>right</option>
+        <option>top</option>
+        <option>bottom</option>
+        <option>left</option>
+      </select>
+    </section>
+    <div>
+      <button class="btn1">#8a2be2</button>
+      <button class="btn2">#eded0c</button>
+    </div>
+
+    <span>copy code from here :- </span>
+    <div class="code">
+      background-image: linear-gradient(to right, #8a2be2,#eded0c);
+    </div>
+  </div>
+
+
+  <script>
+
+    let btn1 = document.querySelector('.btn1');
+    let btn2 = document.querySelector('.btn2');
+    let copyCode = document.querySelector('.code');
+    let gradientSelector = document.getElementById('gradient-selector');
+    let optionDiv = document.querySelector(".after-gradient-option");
+
+    let shape = 'circle';  // Default shape is 'circle'
+    let direction = 'right';  // Default direction is 'right'
+
+    let gradient = 'linear-gradient';
+    let background = () => {
+      if (gradient == 'radial-gradient') {
+        // Render shape options only if not already there
+        optionDiv.innerHTML = `<select class='radial'>
+            <option value="circle" ${shape === 'circle' ? 'selected' : ''}>circle</option>
+            <option value="ellipse" ${shape === 'ellipse' ? 'selected' : ''}>ellipse</option>
+        </select>`;
+
+        let shapeSection = document.querySelector('.radial');
+        shapeSection.addEventListener('change', () => {
+          shape = shapeSection.value;  // Update the shape based on user selection
+          console.log("shape", shape);
+          background();  // Update background immediately after changing shape
+        });
+
+        document.body.style.backgroundImage = `${gradient}(${shape}, ${rgb1}, ${rgb2})`;
+        copyCode.innerHTML = `background-image: ${gradient}(${shape}, ${rgb1}, ${rgb2})`;
+      } else {
+        // Render direction options
+        optionDiv.innerHTML = `<select class="linear">
+            <option value="top" ${direction === 'top' ? 'selected' : ''}>top</option>
+            <option value="right" ${direction === 'right' ? 'selected' : ''}>right</option>
+            <option value="bottom" ${direction === 'bottom' ? 'selected' : ''}>bottom</option>
+            <option value="left" ${direction === 'left' ? 'selected' : ''}>left</option>
+        </select>`;
+
+        let directionSection = document.querySelector('.linear');
+        directionSection.addEventListener('change', () => {
+          direction = directionSection.value;  // Update the direction based on user selection
+          background();  // Update background immediately after changing direction
+        });
+
+        document.body.style.backgroundImage = `${gradient}(to ${direction}, ${rgb1}, ${rgb2})`;
+        copyCode.innerHTML = `background-image: ${gradient}(to ${direction}, ${rgb1}, ${rgb2})`;
+      }
+    }
+
+    gradientSelector.addEventListener('change', () => {
+      gradient = gradientSelector.value;
+      background();
+    })
+
+    let rgb1 = '#8a2be2';
+    let rgb2 = '#eded0c';
+
+    function colorCode() {
+      let str = '0123456789abcdef';
+      let color = "#";
+      for (let i = 0; i < 6; i++) {
+        let index = Math.floor((Math.random() * 16));
+        color = color + str[index];
+      }
+      return color;
+    }
+
+    const changeColorBtn1 = () => {
+      rgb1 = colorCode();
+      background();
+      btn1.innerText = rgb1;
+    }
+
+    const changeColorBtn2 = () => {
+      rgb2 = colorCode();
+      background();
+      btn2.innerText = rgb2;
+    }
+
+    btn1.addEventListener('click', changeColorBtn1);
+    btn2.addEventListener('click', changeColorBtn2);
+
+    copyCode.addEventListener('click', () => {
+      navigator.clipboard.writeText(copyCode.innerText);
+      alert("Copied");
+    });
+
+  </script>
+</body>
+
+</html>
